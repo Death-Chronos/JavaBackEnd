@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+
 import jakarta.validation.Valid;
+import spring.react.java.fullStack.DTOs.ErroDTO;
 import spring.react.java.fullStack.DTOs.UserDTO;
 import spring.react.java.fullStack.models.User;
 import spring.react.java.fullStack.repositorys.UserRepository;
@@ -40,11 +44,21 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     ResponseEntity<Object> getUser(@PathVariable Long id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado"); // também podemos usar throw new UserNotFoundException(id);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(user.get());
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        // final var gson = new Gson();
+        // ErroDTO erro = new ErroDTO("Usuario não encontrado.");
+        // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(gson.toJson(erro));
 
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+
+    }
+
+    @PutMapping("user/{id}")
+    ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody @Valid UserDTO userDTO) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+
+        BeanUtils.copyProperties(userDTO, user);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(user));
     }
 }
