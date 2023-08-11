@@ -10,3 +10,7 @@ Este repositório tem a parte Back End(API) de uma aplicação Java Spring criad
 * Criar um banco de dados chamado "fullstack", ou mudar o nome do banco no arquivo application.properties
 * Colocar as informações do seu banco de dados no application.properties, como login e senha
 * Agora é só rodar
+
+# Menção
+Criado com base no código do Canal 
+ [Cursos de Progamação](https://www.youtube.com/@cursosdeprogramacao).
